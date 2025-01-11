@@ -1,0 +1,78 @@
+{ 
+"__note__conv_bond_":
+{
+	"format-of-this-JSON": "key: value == [caption, input <,tooltip, validator>(optional)]",
+	"key": "89 keys are wrote into params.file and used by C++ executable. Do NOT modify",
+	"value": "caption (py-Label)-input (py-Entry) pair within square-brackets",
+	"schedule-key": "caption-input pairs show sequentially on GUI. placed LAST on GUI",
+	"input-choice": "cpp_input-list (py-OptionMenu)",
+	"no-caption": "if EMPTY string as caption, do NOT show on GUI, but write to params.file",
+	"gkey_": "GUI-only info. hard-coded in GUI. Do NOT modify",
+	"validator": "<date_us, non_minus, plus, btw_2_7> (dynamic-range is encoded in btw_2_7, handled as default of switch-case, and passed to validating-event via TextBox.Tag of CSharp)"
+},
+"Tooltips":
+{
+	"date_fmt": "US date: month/day/year",
+	"not_neg": "Value: Zero or positive",
+	"nn_dollar": "Dollar alue: Zero or positive",
+	"nn_percent": "Value (5% as 0.05): Zero or positive",
+	"positive": "Value: Positive",
+	"dollar": "Dollar alue: Positive",
+	"percent": "Value (5% as 0.05): Positive",
+	"has_cash_schedule":"false: in bond points (DEFAULT)\ntrue: in dollar (b-point:=10 USD or 1 CNY)",
+	"first_coupon_date":"used only to build schedule for Step-up coupons",
+	"coupon_schedule":"[has_cash_schedule]:\nfalse> Annual rate 5% as 0.05 (One date|rate: fixed coupon; More: Step-up coupons)\ntrue> All coupon amounts",
+	"is_stepup_cpn":"Set to false: if only one date|rate in [coupon_schedule]",
+	"provcall_terms": "days above|days total|trigger-px|consecutive",
+	"stock_closes":"1st-bit: yesterday; 2nd-bit: day before yesterday...\n1: close-above; 0: close-below",
+	"provput_terms":"days below|days total|trigger-px|consecutive",
+	"stock_closes_pput":"1st-bit: yesterday; 2nd-bit: day before yesterday...\n1=close-below; 0=close-above",
+	"afv": "Ayache-Forsyth-Vetzal (2003)",
+	"afv_eta":"1.0: stock px jumps to zero; 0: stock px stays the same at default",
+	"recover_face":"nominal amount used to calculate the amount recovered at default",
+	"crp": "conditional range probability (Liu-Guo, 2020)"
+},
+"Convert": 
+{
+	"derivative_trd_name": ["Conv-bond name", "ABC firm"],
+	"par_nominal": ["Conv-bond par", "100","positive","plus"],
+	"maturity": ["CB mature date", "3/2/2026", "date_fmt","date_us"],
+	"cvt_notice_period": ["Convert notice period (days)",  "0"],
+	"convert_cash": ["Cash amount in convert", "0", "not_neg","non_minus"],
+	"has_convert_accr": ["Accrued-int in convert?", ["false","true"]],
+	"has_cash_schedule": ["Cash schedules?",  ["false","true"],"has_cash_schedule"],
+	"is_forced_matur_conv": ["", "false"],
+	"convert_schedule": ["Convert start date","9/7/2020"],
+	"convert_schedule2": [ "Convert ratio",  "20.5339"]
+},
+"FiniteDiff":
+{
+	"diffuse_method_id":["Diffuser", ["crank_nicolson","explicit_finite","implicit_finite"]],
+	"finitediff_steps":["Number of time steps", "2000","positive","plus"],
+	"pde_model_id":["PDE model", ["afv_convbond_pde","blackscholes_pde"]],
+	"hazard_rate":["Annual hazard rate (AFV)", "0.02", "afv"],
+	"recovery":["Recovery rate (AFV)", "0","nn_percent"],
+	"recover_face":["Recovery face (AFV)", "1.0", "recover_face"],
+	"afv_eta":["Ratio of stock price jump at default (AFV)", "0", "afv_eta", "btw_0_1"],
+	"max_drift":["","0.25"],
+	"interp_id":["", "npoint_interp"],
+	"interp_degree":["","5"],
+	"interp_mode_id":["", "np_following"] 
+},
+"PxIV":
+{
+	"value_date":["Valuation date", "8/18/2021","date_fmt","date_us"],
+	"underlying_px":["Stock price", "8.93","positive","plus"],
+	"derivative_px":["CB market price", "192.13","positive"],
+	"credit_spread":["Annual credit spread (bps)", "0"],
+	"volatility_series":["Annual stock volatility", "0.4","percent"],
+	"disc_rate_series":["Annual CC risk-free rate", "0.05","nn_percent"],
+	"gkey_cpp":["CB pricing executable", "dpCvtBondPx_t6m.exe"],
+	"gkey_dir":["Full path of this CB-GUI", "work_dir"],
+	"gkey_PxIv":["Pricing or Solving IV", ["Do price","Do implied volatility"] ],
+	"gkey_cbPx":["CB Fair price", ""],
+	"gkey_delta":["Delta", ""],
+	"gkey_gamma":["Gamma", ""],
+	"gkey_iv":["Implied volatility", ""]
+}
+}   

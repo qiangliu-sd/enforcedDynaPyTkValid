@@ -5,6 +5,10 @@ def yyyymmdd(us_date):
     dateO = datetime.strptime(us_date, "%m/%d/%Y")  # date-obj
     return dateO.strftime("%Y%m%d")
 
+#! hard-coded JSON keys/values & positions:
+#   _date, maturity
+#   positions of schedule
+
 class GuiToFile: 
     def __init__(self, file_name):
         self.of = open(file_name, 'w', encoding='utf-8')  #output-file

@@ -7,7 +7,7 @@ import sys
 sys.path.append(r'.\src')  # add search path
 import os
  
-from TabWLableEntryGrid import *
+from LableEntryGrid import *
 from MyJson import *
 from Gui2File import *
 from CppInPy import *
@@ -16,6 +16,10 @@ from CppInPy import *
 #   MyClass, self.dataMember, self.memberFunc
 #   arg_in, localVar
 #   MYCONSTANT
+
+#! hard-coded dir/file names:
+#   qllog, __py.cb_params.txt
+#   MySample.json
 
 # GUI (interface) class 
 class TkinterGUI(tk.Tk):
@@ -46,7 +50,7 @@ class TkinterGUI(tk.Tk):
         self.tabPxIV.setWDir(os.getcwd())
     
     def addButtons(self):
-        bPx = Button(self, text="Compute", command=lambda: self.bpx_clicked())
+        bPx = Button(self, text="Compute", command=lambda: self.bPxClicked())
         bSave = Button(self, text="Save parameters", command=lambda: self.bSaveClicked())
         bPx.pack(side=tk.RIGHT)
         bSave.pack(side=tk.RIGHT)
@@ -55,7 +59,7 @@ class TkinterGUI(tk.Tk):
         self.lMsg.pack(side=tk.BOTTOM)   
     
     def bSaveClicked(self):
-        self.tabPxIV.setFocus()  # ensure user-input are valid
+        self.tabPxIV.setFocus()  # remind after SAVE: user-input invalid
         
         self.lMsg.config(text="Saving parameters ...")
         t2f = GuiToFile(self.prmFn)
@@ -67,7 +71,7 @@ class TkinterGUI(tk.Tk):
         del t2f
         self.lMsg.config(text="Parameters SAVED")
 
-    def bpx_clicked(self):
+    def bPxClicked(self):
         self.bSaveClicked()   # save params first
 
         cppFn = os.path.join(self.DCpp,self.tabPxIV.cppExe())
@@ -92,11 +96,11 @@ class TkinterGUI(tk.Tk):
             self.lMsg.config(text=f"Pricing results file XCP: {e}")
 
  
-def tkGui():
+def tkGuiMain():
     myGui = TkinterGUI(r'.\src\MySample.json')
     myGui.geometry("600x500")
-    myGui.title("QLiu:: Forced Dynamic Tk-Validating with JSON")
+    myGui.title("QLiu:: Enforced Dynamic Tk-Validating with JSON")
     myGui.mainloop()
     
 if __name__ == "__main__":
-    tkGui()
+    tkGuiMain()

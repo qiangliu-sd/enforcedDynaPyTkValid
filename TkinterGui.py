@@ -12,17 +12,19 @@ from MyJson import *
 from Gui2File import *
 from CppInPy import *
 
-### Style:
-#   MyClass, self.dataMember, self.memberFunc
-#   arg_in, localVar
-#   MYCONSTANT
-
 #! hard-coded dir/file names:
 #   qllog, __py.cb_params.txt
 #   MySample.json
 
 # GUI (interface) class 
 class TkinterGUI(tk.Tk):
+    """Coding-Style:
+    
+        MyClass, self.dataMember, self.memberFunc
+        arg_in, localVar
+        MYCONSTANT
+    """
+    
     def __init__(self, json_fn):   
         tk.Tk.__init__(self)
         self.DCpp = "qlcpp"     
@@ -97,6 +99,7 @@ class TkinterGUI(tk.Tk):
 
  
 def tkGuiMain():
+    """Runs in current-work-dir"""
     myGui = TkinterGUI(r'.\src\MySample.json')
     myGui.geometry("600x500")
     myGui.title("QLiu:: Enforced Dynamic Tk-Validating with JSON")

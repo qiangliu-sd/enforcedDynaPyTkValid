@@ -31,12 +31,12 @@ class TkinterGUI(tk.Tk):
         
         self.prmFn = os.path.join(self.DINPUT, "__py.cb_params.txt")
         self.pxivFn = os.path.join(self.DLOG,"__py.cb_px_iv.txt")
-        self.check3SubDir()
+        self.check3SubDirs()
         # setup GUI
-        self.addTabs(json_fn)    
-        self.addButtons()        
+        self.add3Tabs(json_fn)    
+        self.add2Buttons1Label()        
     
-    def addTabs(self, json_fn):
+    def add3Tabs(self, json_fn):
         noteBk = ttk.Notebook()  # hold tabs; NOT used directly later
         cb = MyJson(json_fn)
 
@@ -49,7 +49,7 @@ class TkinterGUI(tk.Tk):
         noteBk.pack()
         self.tabPxIV.setWDir(os.getcwd())
     
-    def addButtons(self):
+    def add2Buttons1Label(self):
         bPx = Button(self, text="Compute", command=lambda: self.bPxClicked())
         bSave = Button(self, text="Save parameters", command=lambda: self.bSaveClicked())
         bPx.pack(side=tk.RIGHT)
@@ -79,7 +79,7 @@ class TkinterGUI(tk.Tk):
         px.run(cppFn, self.tabPxIV.runId(),self.prmFn,self.pxivFn )
         if px.success(): self.showPx_IV()
                    
-    def check3SubDir(self):
+    def check3SubDirs(self):
         if not (os.path.isdir(self.DCpp)):  os.mkdir(self.DCpp)
         if not (os.path.isdir(self.DLOG)):  os.mkdir(self.DLOG)
         if not (os.path.isdir(self.DINPUT)):os.mkdir(self.DINPUT)

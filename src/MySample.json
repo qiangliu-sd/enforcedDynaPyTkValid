@@ -8,16 +8,16 @@
 	"input-choice": "cpp_input-list (py-OptionMenu)",
 	"no-caption": "if EMPTY string as caption, do NOT show on GUI, but write to params.file",
 	"gkey_": "GUI-only info. hard-coded in GUI. Do NOT modify",
-	"validator": "<date_us, non_minus, plus, btw_2_7> (dynamic-range is encoded in btw_2_7, handled as default of switch-case, and passed to validating-event via TextBox.Tag of CSharp)"
+	"validator": "<date_us, non_minus, plus, btw_2_7> (dynamic-range is encoded in btw_2_7, handled as default of switch-case, and passed to validating-event via TextBox.Tag in CSharp)"
 },
 "Tooltips":
 {
 	"date_fmt": "US date: month/day/year",
 	"not_neg": "Value: Zero or positive",
-	"nn_dollar": "Dollar alue: Zero or positive",
+	"nn_dollar": "Dollar value: Zero or positive",
 	"nn_percent": "Value (5% as 0.05): Zero or positive",
 	"positive": "Value: Positive",
-	"dollar": "Dollar alue: Positive",
+	"dollar": "Dollar value: Positive",
 	"percent": "Value (5% as 0.05): Positive",
 	"has_cash_schedule":"false: in bond points (DEFAULT)\ntrue: in dollar (b-point:=10 USD or 1 CNY)",
 	"first_coupon_date":"used only to build schedule for Step-up coupons",

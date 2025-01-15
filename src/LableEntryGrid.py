@@ -7,14 +7,17 @@ from tkinter import messagebox as mb
 import re
 from datetime import datetime
 
-# stored in the class: list of widgets with
-#   { key: [caption, value, <tooltip, validate-code>] }
-
 #! hard-coded JSON keys/values & positions:
 #   date_us, non_minus
 #   maturity, gkey_dir
                 
 class LableEntryGrid(Frame):   
+    """Grid of Label, Entry, OptionMenu
+    
+    From JSON, list of widgets store 
+        key: [caption, value, <tooltip, <validate-code> >]
+    """
+    
     def __init__(self, master, cb_part, cb_tips):
         Frame.__init__(self, master)       
         self.columnconfigure(0, weight=2) # configure grid
@@ -28,7 +31,8 @@ class LableEntryGrid(Frame):
     def key(self, row_i): return self.gInputL[row_i].key   
     def valByIdx(self, row_i): return self.gInputL[row_i].get()    
     
-    def valByKey(self, gkey):      # return gui-input for gui-key 
+    def valByKey(self, gkey):      
+        """Arg: gui-key; Output: GUI user-input"""  
         for ctrl in self.gInputL:
             if ctrl.key == gkey: return ctrl.get()
         return ""
@@ -58,9 +62,9 @@ class LableEntryGrid(Frame):
     def addLabel(self, row_i, caption):
         gLabel = Label(self, text=caption)
         gLabel.grid(column=0, row=row_i, sticky=W, padx=2, pady=2)
-
-    # ToolTip and validatecommand
+ 
     def addEntryRow(self, row_i, val_list, cb_tips):
+        """Optional ToolTip and validatecommand"""
         self.addLabel( row_i, val_list[0])      # caption
         
         uEntry = Entry(self, justify="right")   # user-Entry
@@ -74,6 +78,7 @@ class LableEntryGrid(Frame):
         return uEntry          # Entry for retrieve value later
         
     def addOptMenuRow(self, row_i, val_list, cb_tips):  
+        """Optional ToolTip"""
         self.addLabel( row_i, val_list[0])
         
         optVals = val_list[1]       # optVals: LIST
@@ -114,7 +119,8 @@ class LableEntryGrid(Frame):
             self.nametowidget(widget_name).focus_set()
             return False    
         
-    def validateInBtw(self, g_input, widget_name, valid_code):    
+    def validateInBtw(self, g_input, widget_name, valid_code):   
+        """Arg valid_code by client: dynamic-range as btw_3_7"""
         x,lowB,highB = valid_code.split("_")   # lowB: low-bound
         if self.isNonNegative(g_input):
             if float(lowB) <= float(g_input) and float(g_input) <= float(highB): return True

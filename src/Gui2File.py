@@ -2,6 +2,7 @@ import re
 from datetime import datetime
 
 def yyyymmdd(us_date):
+    """Input: US-date; Output: yyyymmdd"""
     dateO = datetime.strptime(us_date, "%m/%d/%Y")  # date-obj
     return dateO.strftime("%Y%m%d")
 
@@ -10,6 +11,8 @@ def yyyymmdd(us_date):
 #   positions of schedule
 
 class GuiToFile: 
+    """Write inputs on GUI to parameters-file for C++"""
+    
     def __init__(self, file_name):
         self.of = open(file_name, 'w', encoding='utf-8')  #output-file
         
@@ -34,12 +37,21 @@ class GuiToFile:
     def writeLines(self,tab, i_start, minus_i):  # index: i_start to N - minus_i
         for k in range(i_start, tab.size()-minus_i):
             self.writeLine(tab.key(k),tab.valByIdx(k))     
-        return k+1   # index of Next item
+
+    def index_number(self, tab, part_key):  
+        """index of first-match and number of matches of partial-key"""
+        idx, num = -1, 0
+        for k in range(0, tab.size()):
+            if re.search(f'{part_key}', tab.key(k)):
+                if idx == -1: idx = k
+                num += 1
+        return idx, num
 
     def convert(self,tab):
         self.outComment("CONVERT")
-        nextI = self.writeLines(tab, 0, 2)
-        self.outSchedule(tab, nextI)
+        idx, num = self.index_number(tab, "convert_schedule")
+        self.writeLines(tab, 0, num)
+        self.outSchedule(tab, idx)
            
     def finiteDiff(self,tab):
         self.outComment("FINITE DIFFERENCE")
@@ -47,12 +59,12 @@ class GuiToFile:
     
     def pxIV(self,tab, mat_date):
         self.outComment("CONV-BOND PRICING INFO")
-        GKEY_N = 7     
-        SCHD_N = 2      # volatility-series & rate-series
+        iGkey, nGkey = self.index_number(tab, "gkey_")
+        iVol, nVol = self.index_number(tab, "volatility_series") 
+        iRate, nRate = self.index_number(tab, "disc_rate_series") 
          
-        nextI = self.writeLines(tab, 0, GKEY_N + SCHD_N)       
-        self.outSchdImpl(tab.key(nextI), tab.valByIdx(0), tab.valByIdx(nextI))
-        nextI += 1
-        self.outSchdImpl(tab.key(nextI), mat_date, tab.valByIdx(nextI))
+        self.writeLines(tab, 0, nGkey+nVol+nRate)     
+        self.outSchdImpl(tab.key(iVol), tab.valByIdx(0), tab.valByIdx(iVol))
+        self.outSchdImpl(tab.key(iRate), mat_date, tab.valByIdx(iRate))
         
     

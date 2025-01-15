@@ -10,6 +10,8 @@ import json
 #   Convert, Tooltips
 
 class MyJson: 
+    """Load JSON into data-members as Python dictionary"""
+    
     def __init__(self, json_fn):
         with open(json_fn, 'r') as jFile:
             # Load JSON data into Python dictionary

@@ -13,10 +13,12 @@ from datetime import datetime
                 
 class LableEntryGrid(Frame):   
     """Grid of Label, Entry, OptionMenu
-    
+       -------------
     From JSON, list of widgets store 
         key: [caption, value, <tooltip, <validate-code> >]
     """
+    
+    _inputValid = True
     
     def __init__(self, master, cb_part, cb_tips):
         Frame.__init__(self, master)       
@@ -32,7 +34,9 @@ class LableEntryGrid(Frame):
     def valByIdx(self, row_i): return self.gInputL[row_i].get()    
     
     def valByKey(self, gkey):      
-        """Arg: gui-key; Output: GUI user-input"""  
+        """Args:     gui-key
+           Returns:  GUI user-input
+        """  
         for ctrl in self.gInputL:
             if ctrl.key == gkey: return ctrl.get()
         return ""
@@ -98,36 +102,61 @@ class LableEntryGrid(Frame):
         
     def isNonNegative(self, str_i): return re.match(r"^[0-9]*\.?[0-9]+$", str_i)
     
+    def setValid(self, t_or_f: bool):
+        """Modify class-var [_inputValid]
+        
+        In case any user-input is invalid when Button clicked,
+            clients can force a [focusout] event & abort action
+        """       
+        LableEntryGrid._inputValid = t_or_f
+    
     def validateNotNegative(self, g_input, widget_name):    
-        if self.isNonNegative(g_input): return True
-        mb.showerror("BAD Input", f"{g_input}: NOT zero or positive")
+        if self.isNonNegative(g_input): 
+            self.setValid(True)
+            return True
+        
+        mb.showerror("BAD Input", f"{g_input}: NOT zero or positive")        
         self.nametowidget(widget_name).focus_set()
+        self.setValid(False)
         return False
         
     def validatePositive(self,g_input, widget_name):    
-        if self.isNonNegative(g_input) and 0.0 < float(g_input): return True
+        if self.isNonNegative(g_input) and 0.0 < float(g_input):  
+            self.setValid(True)
+            return True
+        
         mb.showerror("BAD Input", f"{g_input}: NOT positive")
         self.nametowidget(widget_name).focus_set()
+        self.setValid(False)
         return False
     
     def validateUSDate(self, g_input, widget_name):    
         try:
             datetime.strptime(g_input, "%m/%d/%Y")
+            self.setValid(True)
             return True
         except ValueError:
             mb.showerror("BAD Input", f"{g_input}: NOT a US-date (month/day/year)")
             self.nametowidget(widget_name).focus_set()
+            self.setValid(False)
             return False    
         
     def validateInBtw(self, g_input, widget_name, valid_code):   
-        """Arg valid_code by client: dynamic-range as btw_3_7"""
+        """Args [valid_code] by client: 
+            dynamic-range [3,7] coded as btw_3_7 in JSON
+        """
         x,lowB,highB = valid_code.split("_")   # lowB: low-bound
         if self.isNonNegative(g_input):
-            if float(lowB) <= float(g_input) and float(g_input) <= float(highB): return True
+            if float(lowB) <= float(g_input) and float(g_input) <= float(highB):  
+                self.setValid(True)
+                return True
+                
         mb.showerror("BAD Input", f"{g_input}: NOT between {lowB} and {highB}")
         self.nametowidget(widget_name).focus_set()
+        self.setValid(False)
         return False
     
+        
     def addValidator(self, valid_code):
         if valid_code == "date_us":
             vCmd = (self.register(self.validateUSDate), '%P', '%W')
@@ -164,4 +193,6 @@ class PxIVLEGrid(LableEntryGrid):
     def setIV(self, iv): self.setVal('gkey_iv', iv[0])    
     def setWDir(self, w_dir): self.setVal('gkey_dir', w_dir)
     
-    def setFocus(self): self.gInputL[0].focus_set()
+    def setFocus(self): 
+        self.focus_set()
+        self.gInputL[0].focus_set()

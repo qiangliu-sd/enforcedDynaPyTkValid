@@ -1,10 +1,5 @@
 import re
-from datetime import datetime
-
-def yyyymmdd(us_date):
-    """Input: US-date; Output: yyyymmdd"""
-    dateO = datetime.strptime(us_date, "%m/%d/%Y")  # date-obj
-    return dateO.strftime("%Y%m%d")
+from MyUtils import yyyymmdd
 
 #! hard-coded JSON keys/values & positions:
 #   _date, maturity

@@ -11,6 +11,7 @@ from LableEntryGrid import *
 from MyJson import *
 from Gui2File import *
 from CppInPy import *
+from MyUtils import fleetingPopup
 
 #! hard-coded dir/file names:
 #   qllog, __py.cb_params.txt
@@ -18,19 +19,19 @@ from CppInPy import *
 
 # GUI (interface) class 
 class TkinterGUI(tk.Tk):
-    """Coding-Style:
-    
-        MyClass, self.dataMember, self.memberFunc
+    """Coding-STYLE
+       ------------
+        MyClass, _classVar, self.dataMemb, self.membFunc
         arg_in, localVar
-        MYCONSTANT
+        MYCONSTANT 
     """
     
+    DCpp = "qlcpp"      # dir-cpp  
+    DLOG = "qllog"      # used by C++ (do NOT modify)
+    DINPUT = "qlinput"
+        
     def __init__(self, json_fn):   
         tk.Tk.__init__(self)
-        self.DCpp = "qlcpp"     
-        self.DLOG = "qllog"     # used by C++ (do NOT modify)
-        self.DINPUT = "qlinput"
-        
         self.prmFn = os.path.join(self.DINPUT, "__py.cb_params.txt")
         self.pxivFn = os.path.join(self.DLOG,"__py.cb_px_iv.txt")
         self.check3SubDirs()
@@ -48,12 +49,14 @@ class TkinterGUI(tk.Tk):
         noteBk.add(self.tabCvt, text="Convert")
         noteBk.add(self.tabFD, text="Finite Difference")
         noteBk.add(self.tabPxIV, text="Pricing/Implied-vol")
-        noteBk.pack()
         self.tabPxIV.setWDir(os.getcwd())
+        noteBk.pack()
+        #noteBk.select(self.tabPxIV)    # set-focus
+        #self.tabPxIV.setFocus()
     
     def add2Buttons1Label(self):
         bPx = Button(self, text="Compute", command=lambda: self.bPxClicked())
-        bSave = Button(self, text="Save parameters", command=lambda: self.bSaveClicked())
+        bSave = Button(self, text="Save Parameters", command=lambda: self.bSaveClicked())
         bPx.pack(side=tk.RIGHT)
         bSave.pack(side=tk.RIGHT)
         initNote = f"C++ exe in [{self.DCpp}]\nCB parameters in [{self.DINPUT}]\nLOG-files in [{self.DLOG}]"
@@ -61,9 +64,17 @@ class TkinterGUI(tk.Tk):
         self.lMsg.pack(side=tk.BOTTOM)   
     
     def bSaveClicked(self):
-        self.tabPxIV.setFocus()  # remind after SAVE: user-input invalid
-        
-        self.lMsg.config(text="Saving parameters ...")
+        """Button clicked with invalid user-input:
+            focus-out is NOT trigger.
+            
+            Force [focusout] by [fleetingPopup] with at least 20 millisec
+        """       
+        fleetingPopup(20)
+        if not LableEntryGrid._inputValid:
+            self.lMsg.config(text="BAD inputs!!!")
+            return
+       
+        self.lMsg.config(text="Saving Parameters ...")
         t2f = GuiToFile(self.prmFn)
         matDate = self.tabCvt.matDate()
         
@@ -96,13 +107,13 @@ class TkinterGUI(tk.Tk):
             else: self.tabPxIV.setIV(px_iv[0])
         except IOError as e:
             self.lMsg.config(text=f"Pricing results file XCP: {e}")
-
+            
  
 def tkGuiMain():
-    """Runs in current-work-dir"""
+    """Runs in dir of this file (current-work-dir)"""
     myGui = TkinterGUI(r'.\src\MySample.json')
     myGui.geometry("600x500")
-    myGui.title("QLiu:: Enforced Dynamic Tk-Validating with JSON")
+    myGui.title("QLiu:: Enforced Dynamic-Range Tk-Validating with JSON")
     myGui.mainloop()
     
 if __name__ == "__main__":

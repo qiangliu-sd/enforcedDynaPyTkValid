@@ -1,4 +1,6 @@
-### Advanced Tkinter features:
+### Enforced Dynamic-Range Tkinter-Validating with JSON
+
+# Advanced Py-Tkinter features:
 1. Bulletproof enforced validating of Entry widgets.
 2. Dynamic validating of ranges (or bounds) of user inputs via Entry widgets.
 3. JSON based dynamic GUI with tooltips and validations.
